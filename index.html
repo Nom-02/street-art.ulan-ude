@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Авторские экскурсии по Улан-Удэ: граффити, история и современный стрит-арт.">
+    <title>Улан-Удэ: Стрит-арт экскурсии</title>
+    
+    <link rel="icon" type="image/jpeg" href="img/logo.jpg">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="css/style.css">
+    
+    <script>
+        if (localStorage.getItem('theme') === 'light') document.documentElement.classList.add('light');
+        if (localStorage.getItem('contrast') === 'high') document.documentElement.classList.add('high-contrast');
+    </script>
+</head>
+<body>
+
+    <a href="#main" class="skip-link">Перейти к основному содержанию</a>
+
+    <!-- ГЛАВНАЯ СТРАНИЦА -->
+    <div id="page-home" class="page active">
+        <header class="hero">
+            
+            <!-- ВЕРХНЯЯ ПАНЕЛЬ -->
+            <div class="header-top">
+                <img src="img/logo.jpg" alt="Логотип Улан-Удэ" class="site-logo hero-logo">
+                
+                <nav class="main-nav" id="site-nav" aria-label="Основная навигация">
+                    <a href="#about">О проекте</a>
+                    <a href="#catalog">Маршруты</a>
+                    <a href="#contacts">Связь с нами</a>
+                </nav>
+
+                <div class="header-actions">
+                    <button class="menu-toggle" aria-expanded="false" aria-controls="site-nav" aria-label="Открыть меню">
+                        <span class="menu-toggle__icon"></span>
+                    </button>
+
+                    <button id="a11y-toggle" title="Специальные возможности" aria-label="Открыть меню специальных возможностей" aria-expanded="false" aria-controls="a11y-panel">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+                    </button>
+                </div>
+            </div>
+
+            <!-- ПАНЕЛЬ ДОСТУПНОСТИ -->
+            <div id="a11y-panel" class="a11y-panel" hidden>
+                <button id="a11y-close" class="close-btn" aria-label="Закрыть меню">✕</button>
+                <h3>Специальные возможности</h3>
+                <button id="theme-toggle" class="panel-btn"><span>Тёмная тема</span></button>
+                <div class="speech-player">
+                    <button id="read-page" class="panel-btn" aria-pressed="false"><span id="read-text">Озвучить</span></button>
+                    <button id="speech-prev" class="panel-btn">⏮</button>
+                    <button id="speech-next" class="panel-btn">⏭</button>
+                </div>
+                <button id="contrast-toggle" class="panel-btn" aria-pressed="false"><span>Высокая контрастность</span></button>
+                <hr>
+                <div class="zoom-controls">
+                    <span>Размер сайта:</span>
+                    <div>
+                        <button id="font-decrease" class="zoom-btn">А-</button>
+                        <button id="font-reset" class="zoom-btn">100%</button>
+                        <button id="font-increase" class="zoom-btn">А+</button>
+                    </div>
+                </div>
+            </div>
+
+            <h1>Улан-Удэ</h1>
+            <p>Стрит-арт & История</p>
+            <p class="hero-sub">Авторские экскурсии по местам, где древние традиции встречают современное искусство.</p>
+            <a href="#catalog" class="hero-btn"><span class="dot">●</span> Выбрать экскурсию ↗</a>
+        </header>
+
+        <main id="main">
+            <section id="about" aria-labelledby="about-title" class="section-about">
+                <div class="section-header">
+                    <h2 id="about-title">Сердце Улан-Удэ</h2>
+                    <p>От древних традиций до современного искусства</p>
+                </div>
+                <div class="about-content">
+                    <p>Привет! Меня зовут Номина. Я провожу необычные экскурсии по Улан-Удэ. Мы не просто будем смотреть на памятники архитектуры — мы отправимся искать современное искусство. Огромные муралы с бурятскими мотивами, граффити на трансформаторных будках, смелые арт-объекты и скрытые дворики.</p>
+                    <p>Это взгляд на город глазами художников, где старые купеческие дома соседствуют с яркими красками стрит-арта.</p>
+                </div>
+            </section>
+
+            <section id="catalog" aria-labelledby="catalog-title">
+                <div class="section-header">
+                    <h2 id="catalog-title">Наши экскурсии</h2>
+                    <p>Найдено: 4 экскурсии. Выберите подходящий маршрут.</p>
+                </div>
+
+                <div class="tour-grid">
+                    <!-- Карточка 1 -->
+                    <article class="tour-card" onclick="openTour(1)" tabindex="0" role="button">
+                        <div class="tour-img-wrapper">
+                            <img src="img/tour-1.jpg" alt="Мурал" class="tour-img">
+                            <span class="tour-duration">2 часа</span>
+                        </div>
+                        <div class="tour-body">
+                            <h3>Бурятский стрит-арт</h3>
+                            <p>Найдем огромные граффити с национальными орнаментами, драконами и образами степных воинов.</p>
+                            <div class="tour-footer">
+                                <div class="tour-price">от 1 500 ₽</div>
+                                <span class="tour-arrow">↗</span>
+                            </div>
+                        </div>
+                    </article>
+
+                    <!-- Карточка 2 -->
+                    <article class="tour-card" onclick="openTour(2)" tabindex="0" role="button">
+                        <div class="tour-img-wrapper">
+                            <img src="img/tour-2.jpg" alt="Старый город" class="tour-img">
+                            <span class="tour-duration">3 часа</span>
+                        </div>
+                        <div class="tour-body">
+                            <h3>Верхнеудинск купеческий</h3>
+                            <p>Прогулка по историческому центру: деревянное зодчество, старинные усадьбы и арт-объекты.</p>
+                            <div class="tour-footer">
+                                <div class="tour-price">от 1 900 ₽</div>
+                                <span class="tour-arrow">↗</span>
+                            </div>
+                        </div>
+                    </article>
+
+                    <!-- Карточка 3 -->
+                    <article class="tour-card" onclick="openTour(3)" tabindex="0" role="button">
+                        <div class="tour-img-wrapper">
+                            <img src="img/tour-3.jpg" alt="Ночной город" class="tour-img">
+                            <span class="tour-duration">2 часа</span>
+                        </div>
+                        <div class="tour-body">
+                            <h3>Неоновый Улан-Удэ</h3>
+                            <p>Вечерняя экскурсия при свете фонарей и неоновых вывесок. Узнаем, как город выглядит после заката.</p>
+                            <div class="tour-footer">
+                                <div class="tour-price">от 2 200 ₽</div>
+                                <span class="tour-arrow">↗</span>
+                            </div>
+                        </div>
+                    </article>
+
+                    <!-- Карточка 4 -->
+                    <article class="tour-card" onclick="openTour(4)" tabindex="0" role="button">
+                        <div class="tour-img-wrapper">
+                            <img src="img/tour-4.jpg" alt="Еда" class="tour-img">
+                            <span class="tour-duration">4 часа</span>
+                        </div>
+                        <div class="tour-body">
+                            <h3>Гастрономический тур</h3>
+                            <p>Стрит-арт стрит-артом, а обед по расписанию. Закончим прогулку дегустацией настоящих бууз.</p>
+                            <div class="tour-footer">
+                                <div class="tour-price">от 2 500 ₽</div>
+                                <span class="tour-arrow">↗</span>
+                            </div>
+                        </div>
+                    </article>
+                </div>
+            </section>
+
+            <section id="contacts" aria-labelledby="contacts-title" class="section-contacts">
+                <div class="section-header">
+                    <h2 id="contacts-title">Связь с нами</h2>
+                    <p>Остались вопросы или хотите записаться? Пишите нам, мы вам с радостью поможем.</p>
+                </div>
+                <form action="https://formspree.io/f/xgaoqvpy" method="POST" id="contact-form">
+                    <label for="name">Ваше имя</label>
+                    <input type="text" id="name" name="name" placeholder="Как вас зовут?" required autocomplete="name">
+                    <label for="email">E-mail или телефон</label>
+                    <input type="email" id="email" name="_replyto" placeholder="you@mail.ru" required autocomplete="email">
+                    <label for="msg">Ваш вопрос или название экскурсии</label>
+                    <textarea id="msg" name="message" rows="3" placeholder="Например: Хочу на 'Бурятский стрит-арт'..." required></textarea>
+                    <button type="submit">Отправить</button>
+                </form>
+                <p id="form-status" role="status" aria-live="polite"></p>
+            </section>
+        </main>
+        <footer><p>© <span id="year">2026</span> Номина | Экскурсии по Улан-Удэ.</p></footer>
+    </div>
+
+    <!-- СТРАНИЦА ТУРА -->
+    <div id="page-tour" class="page">
+        <div class="tour-page">
+            <header class="inner-header">
+                <div onclick="showPage('home')" style="cursor: pointer;">
+                    <img src="img/logo.jpg" alt="Логотип" class="site-logo inner-logo">
+                </div>
+                <div class="inner-header-right">
+                    <a class="btn-back" onclick="showPage('home')">← На главную</a>
+                    <!-- Кнопка настроек жестко в HTML -->
+                    <button id="a11y-toggle-tour" title="Специальные возможности" aria-label="Открыть меню" aria-expanded="false" aria-controls="a11y-panel-tour">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+                    </button>
+                </div>
+            </header>
+
+            <!-- ПАНЕЛЬ ДОСТУПНОСТИ (Страница тура) -->
+            <div id="a11y-panel-tour" class="a11y-panel" hidden>
+                <button id="a11y-close-tour" class="close-btn" aria-label="Закрыть меню">✕</button>
+                <h3>Специальные возможности</h3>
+                <button id="theme-toggle-tour" class="panel-btn"><span>Тёмная тема</span></button>
+                <div class="speech-player">
+                    <button id="read-page-tour" class="panel-btn" aria-pressed="false"><span id="read-text-tour">Озвучить</span></button>
+                    <button id="speech-prev-tour" class="panel-btn">⏮</button>
+                    <button id="speech-next-tour" class="panel-btn">⏭</button>
+                </div>
+                <button id="contrast-toggle-tour" class="panel-btn" aria-pressed="false"><span>Высокая контрастность</span></button>
+                <hr>
+                <div class="zoom-controls">
+                    <span>Размер сайта:</span>
+                    <div>
+                        <button id="font-decrease-tour" class="zoom-btn">А-</button>
+                        <button id="font-reset-tour" class="zoom-btn">100%</button>
+                        <button id="font-increase-tour" class="zoom-btn">А+</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="tour-hero">
+                <img id="tour-img" src="" alt="Экскурсия">
+                <div class="tour-hero-overlay"></div>
+                <h1 id="tour-title"></h1>
+            </div>
+            
+            <div class="tour-details">
+                <h2>Описание путешествия</h2>
+                <p id="tour-desc"></p>
+                
+                <p>Вас ждет незабываемое приключение, наполненное красотой города, историей и современным искусством. Наши гиды — эксперты своего дела, которые знают каждый уголок.</p>
+                <p>В стоимость включено: услуги гида, аудиогид (по запросу). Вам останется только наслаждаться видами и фотографировать.</p>
+
+                <h2 style="margin-top: 40px;">Галерея</h2>
+                <div class="tour-gallery" id="tour-gallery"></div>
+
+                <div class="tour-info-box">
+                    <div>
+                        <span class="info-label">Стоимость тура</span>
+                        <span class="info-price" id="tour-price"></span>
+                    </div>
+                    <button class="btn-book" data-open-modal="#modal-booking">Забронировать</button>
+                </div>
+
+                <a class="btn-back" onclick="showPage('home')">← Вернуться ко всем турам</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- СТРАНИЦА БРОНИРОВАНИЯ (отдельная) -->
+    <div id="page-booking" class="page">
+        <div class="booking-page">
+             <header class="inner-header">
+                <div onclick="showPage('home')" style="cursor: pointer;">
+                    <img src="img/logo.jpg" alt="Логотип" class="site-logo inner-logo">
+                </div>
+            </header>
+            <div class="booking-container">
+                <h2>Оставить заявку</h2>
+                <p>Заполните форму, и мы свяжемся с вами для подтверждения деталей</p>
+                <form id="booking-form" action="https://formspree.io/f/xgaoqvpy" method="POST">
+                    <label for="book-name">Ваше имя</label>
+                    <input type="text" id="book-name" name="name" placeholder="Как вас зовут?" required>
+                    <label for="book-email">E-mail или телефон</label>
+                    <input type="email" id="book-email" name="_replyto" placeholder="you@mail.ru" required>
+                    <label for="book-msg">Название экскурсии</label>
+                    <textarea id="book-msg" name="message" rows="3" placeholder="Название экскурсии..." required></textarea>
+                    <button type="submit">Отправить заявку</button>
+                </form>
+                <p id="book-form-status" role="status" aria-live="polite"></p>
+                <div style="text-align: center; margin-top: 20px;">
+                    <a class="btn-back" onclick="showPage('home')">← На главную</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- =========================================
+         МОДАЛЬНОЕ ОКНО БРОНИРОВАНИЯ
+         ========================================= -->
+    <div class="modal" id="modal-booking" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+        <div class="modal__overlay" data-close-modal></div>
+        <div class="modal__content">
+            <button class="modal__close" aria-label="Закрыть окно" data-close-modal>&times;</button>
+            <h2 id="modal-title">Бронирование тура</h2>
+            <p>Оставьте заявку, и мы свяжемся с вами для подтверждения.</p>
+            <form id="modal-booking-form" action="https://formspree.io/f/xgaoqvpy" method="POST">
+                <label for="modal-name">Ваше имя</label>
+                <input type="text" id="modal-name" name="name" placeholder="Как вас зовут?" required>
+                <label for="modal-email">E-mail или телефон</label>
+                <input type="email" id="modal-email" name="_replyto" placeholder="you@mail.ru" required>
+                <label for="modal-msg">Название экскурсии</label>
+                <textarea id="modal-msg" name="message" rows="2" required></textarea>
+                <button type="submit">Отправить заявку</button>
+            </form>
+            <p id="modal-form-status" role="status" aria-live="polite"></p>
+        </div>
+    </div>
+
+    <button id="to-top" title="Наверх" aria-label="Вернуться наверх">↑</button>
+    
+    <script src="js/script.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,659 @@
+/* =========================================
+   ПЕРЕМЕННЫЕ И БАЗОВЫЕ СТИЛИ
+   ========================================= */
+:root {
+    --bg-color: #f4f1eb;
+    --text-main: #1a1a1a;
+    --text-muted: #5a5a5a;
+    --accent-green: #3d4a3e;
+    --accent-light: #e8e4db;
+    --card-bg: #ffffff;
+    --border-radius: 12px;
+    --font-serif: 'Playfair Display', serif;
+    --font-sans: 'Inter', sans-serif;
+    --transition: 0.3s ease;
+    --shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
+    --focus-outline: 3px solid #ff6b35;
+}
+
+/* Темная тема */
+html.light {
+    --bg-color: #1a202c;
+    --text-main: #f7fafc;
+    --text-muted: #a0aec0;
+    --accent-green: #68d391;
+    --accent-light: #2d3748;
+    --card-bg: #2d3748;
+    --shadow: 0 4px 14px rgba(0, 0, 0, 0.4);
+}
+
+/* Высокая контрастность */
+html.high-contrast {
+    filter: invert(1) hue-rotate(180deg);
+    background: #000;
+}
+html.high-contrast img, 
+html.high-contrast video {
+    filter: invert(1) hue-rotate(180deg);
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+
+body {
+    margin: 0;
+    font-family: var(--font-sans);
+    font-size: 16px;
+    line-height: 1.6;
+    color: var(--text-main);
+    background-color: var(--bg-color);
+    overflow-x: hidden;
+    transition: background 0.3s, color 0.3s;
+}
+
+img { max-width: 100%; height: auto; display: block; object-fit: cover; }
+a { text-decoration: none; color: inherit; }
+button { cursor: pointer; font-family: inherit; border: none; background: none; }
+
+/* =========================================
+   ДОСТУПНОСТЬ (A11Y)
+   ========================================= */
+.skip-link {
+    position: absolute; top: -70px; left: 12px;
+    background: var(--accent-green); color: #fff;
+    padding: 10px 18px; border-radius: 8px; z-index: 999;
+    transition: top 0.2s;
+}
+.skip-link:focus { top: 12px; }
+
+a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visible {
+    outline: var(--focus-outline); outline-offset: 2px;
+}
+
+/* Кнопка настроек (Главная) */
+#a11y-toggle {
+    position: relative; 
+    width: 44px; height: 44px;
+    background: rgba(255, 255, 255, 0.15);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 50%; color: #fff; 
+    display: flex; align-items: center; justify-content: center;
+    backdrop-filter: blur(5px); transition: var(--transition);
+    flex-shrink: 0; 
+}
+#a11y-toggle:hover { background: rgba(255, 255, 255, 0.3); transform: scale(1.05); }
+
+/* Панель настроек (Главная) */
+.a11y-panel {
+    position: absolute; top: 85px; right: 40px;
+    background: var(--card-bg); color: var(--text-main);
+    border: 1px solid #ddd; border-radius: var(--border-radius);
+    padding: 20px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    width: 290px; z-index: 999; display: flex; flex-direction: column; gap: 12px;
+}
+.a11y-panel[hidden] { display: none; }
+.a11y-panel h3 { margin: 0 0 8px; font-size: 1.1rem; border-bottom: 2px solid var(--accent-green); padding-bottom: 8px; }
+.close-btn { position: absolute; top: 12px; right: 12px; font-size: 1.2rem; color: var(--text-main); }
+
+.panel-btn {
+    background: var(--accent-light); color: var(--text-main);
+    padding: 10px 16px; border-radius: 8px; font-size: 0.95rem;
+    font-weight: 600; text-align: left; display: flex; align-items: center; gap: 12px;
+    transition: var(--transition);
+}
+.panel-btn:hover, .panel-btn[aria-pressed="true"] { background: var(--accent-green); color: #fff; }
+
+.speech-player { display: flex; gap: 5px; }
+.speech-player .panel-btn:first-child { flex: 1; }
+.speech-player .panel-btn:not(:first-child) { width: 40px; justify-content: center; padding: 10px 0; }
+
+.zoom-controls { display: flex; justify-content: space-between; align-items: center; font-size: 0.9rem; margin-top: 5px; }
+.zoom-btn { background: var(--accent-light); padding: 6px 10px; border-radius: 6px; font-weight: 700; color: var(--text-main); }
+
+/* =========================================
+   ПЕРЕКЛЮЧЕНИЕ СТРАНИЦ (SPA)
+   ========================================= */
+.page { display: none; animation: fadeIn 0.4s ease; }
+.page.active { display: block; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+/* =========================================
+   ГЛАВНАЯ СТРАНИЦА: HERO И ШАПКА
+   ========================================= */
+.hero {
+    position: relative;
+    height: 100vh; min-height: 700px;
+    background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.6)),
+                url('../img/hero-bg.jpg') center/cover no-repeat;
+    display: flex; flex-direction: column;
+    justify-content: center; align-items: center;
+    text-align: center; color: #fff; padding: 20px;
+}
+
+.header-top {
+    position: absolute; 
+    top: 30px; 
+    left: 40px; 
+    right: 40px; 
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center; 
+    z-index: 10;
+}
+
+.site-logo { 
+    height: 55px; 
+    width: auto; 
+    object-fit: contain; 
+    border-radius: 8px;
+    flex-shrink: 0;
+}
+
+/* Правая часть шапки (Бургер + Шестеренка) */
+.header-actions {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+/* Меню (по центру) */
+.main-nav {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 30px;
+}
+
+.main-nav a {
+    color: #fff; 
+    font-size: 0.9rem; 
+    text-transform: uppercase;
+    letter-spacing: 1px; 
+    opacity: 0.8; 
+    transition: var(--transition);
+    text-decoration: none;
+    white-space: nowrap;
+}
+.main-nav a:hover { opacity: 1; color: var(--accent-light); }
+
+.hero h1 {
+    font-family: var(--font-serif);
+    font-size: clamp(4rem, 15vw, 10rem);
+    font-weight: 400; text-transform: uppercase;
+    letter-spacing: 15px; line-height: 0.9; margin: 0 0 10px;
+    text-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+}
+.hero > p:first-of-type {
+    font-size: 1.2rem; letter-spacing: 3px; text-transform: uppercase;
+    margin: 0 0 15px; opacity: 0.9; font-weight: 300;
+}
+.hero .hero-sub {
+    font-size: 1rem; letter-spacing: 0; text-transform: none;
+    max-width: 600px; margin-bottom: 40px; opacity: 0.8; line-height: 1.6;
+}
+
+.hero-btn {
+    background: var(--accent-green); color: #fff;
+    padding: 16px 36px; border-radius: 30px;
+    font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px;
+    display: flex; align-items: center; gap: 10px;
+    transition: var(--transition); border: 1px solid transparent;
+}
+.hero-btn:hover { background: transparent; border-color: #fff; transform: scale(1.02); }
+.hero-btn .dot { font-size: 0.6rem; color: var(--accent-green); }
+
+/* =========================================
+   ОСНОВНОЙ КОНТЕНТ
+   ========================================= */
+main { max-width: 1400px; margin: 0 auto; padding: 80px 40px; }
+.section-header { text-align: center; margin-bottom: 60px; }
+.section-header h2 {
+    font-family: var(--font-serif); font-size: clamp(2rem, 5vw, 3.5rem);
+    text-transform: uppercase; letter-spacing: 5px;
+    color: var(--accent-green); margin: 0 0 10px;
+}
+.section-header p { color: var(--text-muted); font-size: 1rem; max-width: 700px; margin: 0 auto; }
+
+.section-about { margin-bottom: 100px; }
+.section-about .about-content { max-width: 800px; margin: 0 auto; font-size: 1.1rem; }
+.section-about .about-content p { margin-bottom: 20px; }
+
+/* =========================================
+   СЕТКА КАРТОЧЕК (ТУРЫ)
+   ========================================= */
+#catalog { margin-bottom: 100px; }
+.tour-grid { display: grid; grid-template-columns: repeat(12, 1fr); gap: 20px; }
+
+.tour-card {
+    position: relative; border-radius: var(--border-radius);
+    overflow: hidden; cursor: pointer; background: #000;
+    transition: var(--transition); grid-column: span 6; height: 450px;
+    box-shadow: var(--shadow);
+}
+.tour-card:hover { transform: translateY(-5px); box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15); }
+
+.tour-img-wrapper { width: 100%; height: 100%; position: relative; }
+.tour-img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.6s ease; }
+.tour-card:hover .tour-img { transform: scale(1.05); }
+
+.tour-img-wrapper::after {
+    content: ''; position: absolute; inset: 0;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.85) 0%, rgba(0, 0, 0, 0) 60%);
+    pointer-events: none;
+}
+
+.tour-duration {
+    position: absolute; top: 20px; right: 20px; z-index: 2;
+    background: rgba(255, 255, 255, 0.2); backdrop-filter: blur(5px);
+    color: #fff; padding: 4px 12px; border-radius: 20px; font-size: 0.8rem;
+}
+
+.tour-body { position: absolute; bottom: 0; left: 0; width: 100%; padding: 25px; z-index: 2; color: #fff; }
+.tour-body h3 {
+    font-family: var(--font-serif); font-size: 1.8rem;
+    margin: 0 0 5px; text-transform: uppercase; line-height: 1.2;
+}
+.tour-body p {
+    font-size: 0.9rem; opacity: 0.85; margin: 0 0 15px; max-width: 95%;
+    display: -webkit-box; 
+    -webkit-line-clamp: 2; 
+    line-clamp: 2;
+    -webkit-box-orient: vertical; 
+    overflow: hidden;
+}
+
+.tour-footer {
+    display: flex; justify-content: space-between; align-items: center;
+    border-top: 1px solid rgba(255, 255, 255, 0.2); padding-top: 15px;
+}
+.tour-price { font-size: 1.2rem; font-weight: 600; }
+.tour-arrow {
+    width: 36px; height: 36px; border-radius: 50%;
+    background: #fff; color: #000; display: flex; align-items: center; justify-content: center;
+    font-size: 1.2rem; transition: var(--transition);
+}
+.tour-card:hover .tour-arrow { background: var(--accent-green); color: #fff; transform: rotate(45deg); }
+
+/* =========================================
+   ФОРМА (КОНТАКТЫ)
+   ========================================= */
+.section-contacts { max-width: 600px; margin: 0 auto; padding-bottom: 80px; }
+form { display: flex; flex-direction: column; gap: 15px; }
+label { font-size: 0.9rem; font-weight: 600; margin-bottom: -5px; color: var(--text-main); }
+input, textarea {
+    width: 100%; padding: 15px; border: 1px solid #ddd;
+    border-radius: 8px; font-family: inherit; font-size: 1rem;
+    background: var(--card-bg); color: var(--text-main); transition: var(--transition);
+}
+input:focus, textarea:focus { outline: none; border-color: var(--accent-green); }
+button[type="submit"] {
+    background: var(--accent-green); color: #fff;
+    padding: 18px; border-radius: 8px; font-size: 1rem;
+    font-weight: 600; text-transform: uppercase; margin-top: 10px;
+    transition: var(--transition); border: none;
+}
+button[type="submit"]:hover { background: #2c362d; transform: translateY(-2px); }
+button[type="submit"]:disabled { background: #ccc; cursor: not-allowed; transform: none; }
+
+#form-status, #book-form-status, #modal-form-status {
+    margin-top: 15px; text-align: center; font-weight: 600;
+    color: var(--accent-green); display: none;
+}
+#form-status.visible, #book-form-status.visible, #modal-form-status.visible { display: block; }
+
+/* =========================================
+   СТРАНИЦА ЭКСКУРСИИ И БРОНИРОВАНИЯ
+   ========================================= */
+.tour-page { min-height: 100vh; padding-bottom: 60px; }
+
+.inner-header {
+    position: absolute; top: 0; left: 0; width: 100%;
+    padding: 20px 40px; display: flex; justify-content: space-between;
+    align-items: center; z-index: 100; 
+    background: rgba(244, 241, 235, 0.95); 
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+}
+.inner-header .site-logo { height: 40px; }
+
+.inner-header-right {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.inner-header .btn-back {
+    color: var(--text-main);
+    font-weight: 600;
+    text-decoration: none;
+    padding: 10px 20px;
+    border: 1px solid var(--text-main);
+    border-radius: 20px;
+    transition: var(--transition);
+    font-size: 0.9rem;
+}
+.inner-header .btn-back:hover {
+    background: var(--text-main);
+    color: var(--bg-color);
+}
+
+/* Кнопка настроек на странице тура (ТЕМНАЯ) */
+#a11y-toggle-tour {
+    width: 44px; height: 44px;
+    background: rgba(0, 0, 0, 0.05);
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    border-radius: 50%; 
+    color: var(--text-main);
+    display: flex; align-items: center; justify-content: center;
+    transition: var(--transition);
+}
+#a11y-toggle-tour:hover { background: rgba(0, 0, 0, 0.1); transform: scale(1.05); }
+
+/* Панель настроек на странице тура */
+#a11y-panel-tour {
+    position: absolute; top: 80px; right: 40px;
+    background: var(--card-bg); color: var(--text-main);
+    border: 1px solid #ddd; border-radius: var(--border-radius);
+    padding: 20px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    width: 290px; z-index: 999; display: flex; flex-direction: column; gap: 12px;
+}
+#a11y-panel-tour[hidden] { display: none; }
+
+/* Баннер тура */
+.tour-hero {
+    position: relative; 
+    height: 60vh; 
+    min-height: 500px;
+    width: 100%;
+    display: flex; align-items: center; justify-content: center;
+    color: #fff; overflow: hidden;
+    background-color: #333;
+}
+.tour-hero img { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 0; object-fit: cover; }
+.tour-hero-overlay { position: absolute; inset: 0; background: rgba(0, 0, 0, 0.5); z-index: 1; }
+.tour-hero h1 {
+    position: relative; z-index: 2; font-family: var(--font-serif);
+    font-size: clamp(2rem, 8vw, 5rem); text-transform: uppercase;
+    letter-spacing: 5px; text-align: center; text-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+    padding: 0 20px;
+}
+
+/* Детали тура */
+.tour-details { max-width: 800px; margin: 60px auto; padding: 0 20px; }
+.tour-details h2 { font-family: var(--font-serif); font-size: 2rem; margin-bottom: 20px; color: var(--accent-green); }
+.tour-details p { margin-bottom: 20px; font-size: 1.1rem; color: var(--text-muted); }
+
+/* СЕТКА ГАЛЕРЕИ */
+.tour-gallery {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); 
+    gap: 15px;
+    margin: 40px 0;
+}
+
+.gallery-img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    border-radius: var(--border-radius);
+    cursor: pointer;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+.gallery-img:hover {
+    transform: scale(1.03);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+}
+
+/* Блок бронирования */
+.tour-info-box {
+    background: var(--card-bg); padding: 30px; border-radius: var(--border-radius);
+    margin: 40px 0; display: flex; justify-content: space-between; align-items: center;
+    box-shadow: var(--shadow);
+}
+.info-label { display: block; font-size: 0.9rem; color: var(--text-muted); margin-bottom: 5px; }
+.info-price { font-size: 2rem; font-weight: 700; color: var(--accent-green); }
+
+.btn-book {
+    background: var(--accent-green); color: #fff;
+    padding: 16px 40px; border-radius: 30px;
+    font-size: 1rem; text-transform: uppercase; letter-spacing: 1px;
+    transition: var(--transition); font-weight: 600;
+}
+.btn-book:hover { background: #2c362d; transform: scale(1.02); }
+
+.tour-details .btn-back {
+    display: inline-block; margin-top: 20px;
+    color: var(--text-muted); text-decoration: underline; cursor: pointer;
+    font-weight: 500; transition: var(--transition); border: none; padding: 0;
+}
+.tour-details .btn-back:hover { color: var(--accent-green); background: none; }
+
+/* Страница бронирования (отдельная) */
+.booking-page {
+    padding-top: 130px; min-height: 100vh;
+    display: flex; justify-content: center; align-items: flex-start;
+    padding-bottom: 60px;
+}
+.booking-container {
+    background: var(--card-bg); padding: 50px; border-radius: var(--border-radius);
+    width: 100%; max-width: 600px; box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+    margin: 0 20px;
+}
+.booking-container h2 {
+    font-family: var(--font-serif); font-size: 2.5rem;
+    color: var(--accent-green); margin-bottom: 10px; text-align: center;
+}
+.booking-container p { text-align: center; color: var(--text-muted); margin-bottom: 30px; }
+
+/* =========================================
+   МОБИЛЬНОЕ МЕНЮ (БУРГЕР)
+   ========================================= */
+.menu-toggle {
+    display: none; /* Скрыт на десктопе */
+    width: 44px;
+    height: 44px;
+    position: relative;
+    z-index: 200;
+    background: rgba(255, 255, 255, 0.15);
+    border-radius: 8px;
+    backdrop-filter: blur(5px);
+}
+
+.menu-toggle__icon,
+.menu-toggle__icon::before,
+.menu-toggle__icon::after {
+    display: block;
+    width: 24px;
+    height: 2px;
+    background: #fff;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    transition: transform 0.3s, opacity 0.3s;
+}
+
+.menu-toggle__icon::before,
+.menu-toggle__icon::after {
+    content: '';
+    left: 0;
+    transform: translate(0, 0);
+}
+
+.menu-toggle__icon::before { top: -8px; }
+.menu-toggle__icon::after { top: 8px; }
+
+/* Анимация крестика */
+.menu-toggle[aria-expanded="true"] .menu-toggle__icon { background: transparent; }
+.menu-toggle[aria-expanded="true"] .menu-toggle__icon::before { transform: rotate(45deg); top: 0; }
+.menu-toggle[aria-expanded="true"] .menu-toggle__icon::after { transform: rotate(-45deg); top: 0; }
+
+/* =========================================
+   МОДАЛЬНОЕ ОКНО
+   ========================================= */
+.modal {
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s, visibility 0.3s;
+}
+
+.modal.is-open {
+    opacity: 1;
+    visibility: visible;
+}
+
+.modal__overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(4px);
+}
+
+.modal__content {
+    position: relative;
+    background: var(--card-bg);
+    color: var(--text-main);
+    width: 100%;
+    max-width: 500px;
+    padding: 40px;
+    border-radius: var(--border-radius);
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+    transform: translateY(20px);
+    transition: transform 0.3s;
+    margin: 20px;
+}
+
+.modal.is-open .modal__content {
+    transform: translateY(0);
+}
+
+.modal__close {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    font-size: 2rem;
+    line-height: 1;
+    color: var(--text-muted);
+    transition: color 0.2s;
+}
+.modal__close:hover { color: var(--text-main); }
+
+.modal__content h2 {
+    font-family: var(--font-serif);
+    font-size: 1.8rem;
+    margin: 0 0 10px;
+    color: var(--accent-green);
+}
+.modal__content p {
+    margin: 0 0 20px;
+    color: var(--text-muted);
+}
+
+/* =========================================
+   ФУТЕР И КНОПКА НАВЕРХ
+   ========================================= */
+footer {
+    background: #11151c; color: #718096;
+    text-align: center; padding: 30px; margin-top: 80px; font-size: 0.9rem;
+}
+#to-top {
+    position: fixed; bottom: 24px; right: 24px;
+    width: 50px; height: 50px; border-radius: 50%;
+    background: var(--accent-green); color: #fff; font-size: 24px;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.2);
+    opacity: 0; visibility: hidden; transition: opacity 0.3s, visibility 0.3s;
+    z-index: 90; display: flex; align-items: center; justify-content: center;
+}
+#to-top.visible { opacity: 1; visibility: visible; }
+#to-top:hover { background: #2c362d; transform: translateY(-3px); }
+
+/* =========================================
+   АДАПТИВНОСТЬ (МОБИЛЬНЫЕ)
+   ========================================= */
+@media (max-width: 1024px) {
+    .tour-card { grid-column: span 12; height: 350px; }
+    .tour-body h3 { font-size: 1.5rem; }
+    .hero h1 { font-size: 6rem; letter-spacing: 10px; }
+}
+
+@media (max-width: 768px) {
+    .header-top { top: 20px; left: 20px; right: 20px; }
+    .site-logo { height: 40px; }
+    
+    /* Показываем бургер */
+    .menu-toggle { display: block; }
+    
+    /* Скрываем навигацию, превращаем в выезжающую панель */
+    .main-nav {
+        position: fixed;
+        top: 0;
+        right: -100%;
+        width: 280px;
+        height: 100vh;
+        background: var(--card-bg);
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        gap: 30px;
+        transition: right 0.3s ease;
+        z-index: 150;
+        box-shadow: -5px 0 20px rgba(0,0,0,0.1);
+    }
+    
+    .main-nav.is-open {
+        right: 0;
+    }
+    
+    .main-nav a {
+        color: var(--text-main) !important; /* Темный текст на светлом фоне */
+        font-size: 1.2rem;
+    }
+    
+    #a11y-toggle { width: 38px; height: 38px; }
+    .a11y-panel { top: 70px; right: 20px; left: auto; width: 260px; }
+    
+    header.hero { min-height: 600px; padding-top: 100px; }
+    .hero h1 { font-size: clamp(3rem, 15vw, 4.5rem); letter-spacing: 5px; }
+    .hero .hero-sub { font-size: 0.9rem; padding: 0 10px; }
+    
+    main { padding: 40px 20px; }
+    .section-header h2 { font-size: 1.8rem; letter-spacing: 2px; }
+    .section-header { margin-bottom: 40px; }
+    
+    .tour-card { height: 300px; }
+    .tour-body { padding: 20px; }
+    .tour-body h3 { font-size: 1.3rem; }
+    .tour-body p {
+        font-size: 0.85rem;
+        -webkit-line-clamp: 1; 
+        line-clamp: 1;
+    }
+    
+    .tour-info-box { flex-direction: column; gap: 20px; text-align: center; }
+    .info-price { font-size: 1.6rem; }
+    .btn-book { width: 100%; }
+    
+    .booking-container { padding: 30px 20px; margin: 0 10px; }
+    .booking-container h2 { font-size: 2rem; }
+    
+    .tour-hero { height: 40vh; min-height: 300px; }
+    .tour-hero h1 { font-size: 2rem; letter-spacing: 2px; }
+    .tour-details { margin: 40px auto; }
+    .tour-details h2 { font-size: 1.5rem; }
+    
+    .inner-header { padding: 15px 20px; }
+    .inner-header-right { gap: 10px; }
+    #a11y-toggle-tour { width: 38px; height: 38px; }
+    #a11y-panel-tour { top: 70px; right: 20px; width: 260px; }
+    
+    .modal__content { padding: 30px 20px; }
+}
