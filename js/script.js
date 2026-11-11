@@ -19,7 +19,6 @@ document.addEventListener('DOMContentLoaded', () => {
             menuToggle.setAttribute('aria-label', isOpen ? 'Закрыть меню' : 'Открыть меню');
         });
 
-        // Закрываем меню при клике на любую ссылку внутри него
         siteNav.querySelectorAll('a').forEach(link => {
             link.addEventListener('click', () => {
                 siteNav.classList.remove('is-open');
@@ -40,22 +39,19 @@ document.addEventListener('DOMContentLoaded', () => {
         const openModal = () => {
             lastFocusedElement = document.activeElement;
             modal.classList.add('is-open');
-            document.body.style.overflow = 'hidden'; // Блокируем скролл фона
-            // Переносим фокус на первое поле ввода
+            document.body.style.overflow = 'hidden'; 
             const firstInput = modal.querySelector('input');
             if (firstInput) setTimeout(() => firstInput.focus(), 100);
         };
 
         const closeModal = () => {
             modal.classList.remove('is-open');
-            document.body.style.overflow = ''; // Возвращаем скролл
-            if (lastFocusedElement) lastFocusedElement.focus(); // Возвращаем фокус
+            document.body.style.overflow = ''; 
+            if (lastFocusedElement) lastFocusedElement.focus(); 
         };
 
-        // Открытие по кнопкам с атрибутом data-open-modal
         document.querySelectorAll('[data-open-modal]').forEach(btn => {
             btn.addEventListener('click', () => {
-                // Если мы на странице тура, подставляем его название в форму
                 const tourName = document.querySelector('#tour-title').textContent;
                 if (tourName && document.querySelector('#page-tour').classList.contains('active')) {
                     const msgField = modal.querySelector('#modal-msg');
@@ -65,19 +61,16 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         });
 
-        // Закрытие по крестику и клику на оверлей
         modal.querySelectorAll('[data-close-modal]').forEach(el => {
             el.addEventListener('click', closeModal);
         });
 
-        // Закрытие по Escape
         document.addEventListener('keydown', (e) => {
             if (e.key === 'Escape' && modal.classList.contains('is-open')) {
                 closeModal();
             }
         });
 
-        // Отправка формы внутри модалки
         if (modalForm) {
             modalForm.addEventListener('submit', async (e) => {
                 e.preventDefault();
@@ -102,7 +95,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
                     status.textContent = 'Спасибо! Заявка отправлена.';
                     modalForm.reset();
-                    setTimeout(closeModal, 2000); // Закрываем через 2 секунды
+                    setTimeout(closeModal, 2000); 
                 } catch (error) {
                     status.textContent = 'Ошибка. Попробуйте еще раз.';
                     status.style.color = '#cc4b1d';
@@ -121,30 +114,30 @@ document.addEventListener('DOMContentLoaded', () => {
         1: {
             title: "Бурятский стрит-арт",
             price: "от 1 500 ₽",
-            desc: "Откройте для себя Улан-Удэ с новой стороны! Мы прогуляемся мимо гигантских муралов, где древние национальные орнаменты встречаются с образами степных воинов. Вы увидите, как современные художники переосмысливают вековые традиции, и узнаете, какие глубокие смыслы они закладывают в каждую линию.",
+            desc: "Найдем огромные граффити с национальными орнаментами, драконами и образами степных воинов. Вы узнаете, как современные художники переосмысливают древние традиции и какие смыслы они вкладывают в свои работы.",
             img: "img/tour-1.jpg",
-            gallery: ["img/gr-1.jpg", "img/gr-2.jpg", "img/gr-3.jpg"]
+            gallery: ["img/tour-1.jpg", "img/gr-1.jpg", "img/gr-2.jpg", "img/gr-3.jpg"]
         },
         2: {
             title: "Верхнеудинск купеческий",
             price: "от 1 900 ₽",
             desc: "Прогулка по историческому центру: деревянное зодчество, старинные усадьбы и арт-объекты. Мы сравним, как выглядел город 100 лет назад и как он меняется сейчас благодаря современному искусству.",
             img: "img/tour-2.jpg",
-            gallery: ["img/cup-1.jpg", "img/cup-2.jpg", "img/cup-3.jpg"]
+            gallery: ["img/tour-2.jpg", "img/cup-1.jpg", "img/cup-2.jpg", "img/cup-3.jpg"]
         },
         3: {
             title: "Неоновый Улан-Удэ",
             price: "от 2 200 ₽",
             desc: "Вечерняя экскурсия при свете фонарей и неоновых вывесок. Узнаем, как город выглядит после заката, где находятся самые атмосферные места и какие истории скрываются за яркими витринами.",
             img: "img/tour-3.jpg",
-            gallery: ["img/night-1.jpg", "img/night-2.jpg", "img/night-3.jpg"]
+            gallery: ["img/tour-3.jpg", "img/night-1.jpg", "img/night-2.jpg", "img/night-3.jpg"]
         },
         4: {
             title: "Гастрономический тур",
             price: "от 2 500 ₽",
             desc: "Стрит-арт стрит-артом, а обед по расписанию. Закончим прогулку дегустацией настоящих бууз. Вы попробуете традиционные блюда бурятской кухни и узнаете, как они готовятся.",
             img: "img/tour-4.jpg",
-            gallery: ["img/food-1.jpg", "img/food-2.jpg", "img/food-3.jpg"]
+            gallery: ["img/tour-4.jpg", "img/food-1.jpg", "img/food-2.jpg", "img/food-3.jpg"]
         }
     };
 
@@ -186,11 +179,57 @@ document.addEventListener('DOMContentLoaded', () => {
                 });
             }
         }
+        
+        // Сбрасываем активную вкладку на "Описание" при открытии нового тура
+        const firstTab = document.querySelector('.tabs__btn');
+        if (firstTab) firstTab.click();
+
         showPage('tour');
     };
 
     // =========================================
-    // 6. УНИВЕРСАЛЬНЫЙ ОБРАБОТЧИК ПАНЕЛЕЙ ДОСТУПНОСТИ
+    // 6. ВКЛАДКИ (ТАБЫ) НА СТРАНИЦЕ ТУРА
+    // =========================================
+    const tabs = document.querySelectorAll('.tabs__btn');
+    if (tabs.length > 0) {
+        tabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                tabs.forEach(t => {
+                    t.classList.remove('is-active');
+                    t.setAttribute('aria-selected', 'false');
+                });
+                document.querySelectorAll('.tabs__panel').forEach(p => p.classList.remove('is-active'));
+
+                tab.classList.add('is-active');
+                tab.setAttribute('aria-selected', 'true');
+
+                const panelId = tab.getAttribute('aria-controls');
+                const targetPanel = document.getElementById(panelId);
+                if (targetPanel) {
+                    targetPanel.classList.add('is-active');
+                }
+            });
+        });
+    }
+
+    // =========================================
+    // 7. ЛОГИКА ПРОКРУТКИ ГАЛЕРЕИ
+    // =========================================
+    const galleryContainer = document.getElementById('tour-gallery');
+    const prevBtn = document.querySelector('.gallery-btn--prev');
+    const nextBtn = document.querySelector('.gallery-btn--next');
+
+    if (galleryContainer && prevBtn && nextBtn) {
+        prevBtn.addEventListener('click', () => {
+            galleryContainer.scrollBy({ left: -320, behavior: 'smooth' });
+        });
+        nextBtn.addEventListener('click', () => {
+            galleryContainer.scrollBy({ left: 320, behavior: 'smooth' });
+        });
+    }
+
+    // =========================================
+    // 8. УНИВЕРСАЛЬНЫЙ ОБРАБОТЧИК ПАНЕЛЕЙ ДОСТУПНОСТИ
     // =========================================
     const setupA11yPanel = (prefix) => {
         const toggleBtn = document.querySelector(`#a11y-toggle${prefix}`);
@@ -286,7 +325,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (fontDec) fontDec.addEventListener('click', () => { if (currentZoom > 70) applyZoom(currentZoom - 10); });
         if (fontRes) fontRes.addEventListener('click', () => applyZoom(100));
 
-        // Озвучка текста
+        // Озвучка
         const readBtn = document.querySelector(`#read-page${prefix}`);
         const readText = document.querySelector(`#read-text${prefix}`);
         const prevBtn = document.querySelector(`#speech-prev${prefix}`);
@@ -373,7 +412,7 @@ document.addEventListener('DOMContentLoaded', () => {
     setupA11yPanel('-tour');
 
     // =========================================
-    // 7. ОТПРАВКА ОБЫЧНЫХ ФОРМ (Главная и Страница тура)
+    // 9. ОТПРАВКА ОБЫЧНЫХ ФОРМ
     // =========================================
     const setupForm = (formId, statusId, successMsgTemplate) => {
         const form = document.querySelector(formId);
@@ -421,7 +460,7 @@ document.addEventListener('DOMContentLoaded', () => {
     setupForm('#booking-form', '#book-form-status', 'Спасибо, {name}! Заявка на тур отправлена.');
 
     // =========================================
-    // 8. КНОПКА "НАВЕРХ"
+    // 10. КНОПКА "НАВЕРХ"
     // =========================================
     const upBtn = document.querySelector('#to-top');
     if (upBtn) {

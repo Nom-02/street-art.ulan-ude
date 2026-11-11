@@ -381,33 +381,85 @@ button[type="submit"]:disabled { background: #ccc; cursor: not-allowed; transfor
 
 /* Детали тура */
 .tour-details { max-width: 800px; margin: 60px auto; padding: 0 20px; }
-.tour-details h2 { font-family: var(--font-serif); font-size: 2rem; margin-bottom: 20px; color: var(--accent-green); }
-.tour-details p { margin-bottom: 20px; font-size: 1.1rem; color: var(--text-muted); }
 
-/* СЕТКА ГАЛЕРЕИ */
-.tour-gallery {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); 
-    gap: 15px;
-    margin: 40px 0;
+/* =========================================
+   ВКЛАДКИ (ТАБЫ)
+   ========================================= */
+.tabs { margin: 40px 0; }
+.tabs__list {
+    display: flex; border-bottom: 2px solid var(--accent-light);
+    margin-bottom: 20px; flex-wrap: wrap;
+}
+.tabs__btn {
+    padding: 12px 24px; background: none; border: none;
+    font-family: var(--font-sans); font-size: 1rem; font-weight: 600;
+    color: var(--text-muted); cursor: pointer;
+    border-bottom: 3px solid transparent; margin-bottom: -2px;
+    transition: var(--transition);
+}
+.tabs__btn:hover { color: var(--accent-green); }
+.tabs__btn.is-active { color: var(--accent-green); border-bottom-color: var(--accent-green); }
+
+.tabs__panel { display: none; animation: fadeIn 0.3s ease; }
+.tabs__panel.is-active { display: block; }
+.tabs__panel h2 { font-family: var(--font-serif); font-size: 2rem; margin-bottom: 15px; color: var(--accent-green); }
+.tabs__panel p { margin-bottom: 20px; font-size: 1.1rem; color: var(--text-muted); }
+
+/* =========================================
+   КАРУСЕЛЬ ГАЛЕРЕИ (ПРОКРУТКА)
+   ========================================= */
+.gallery-carousel {
+    position: relative;
+    display: flex;
+    align-items: center;
+    margin: 20px 0;
 }
 
-.gallery-img {
+.tour-gallery {
+    display: flex; /* Горизонтальная лента */
+    gap: 15px;
+    overflow-x: auto; /* Включаем горизонтальную прокрутку */
+    scroll-behavior: smooth;
+    scroll-snap-type: x mandatory; /* Прилипание к картинкам */
+    padding-bottom: 10px; /* Место для скроллбара */
     width: 100%;
+}
+
+/* Прячем стандартный скроллбар для красоты */
+.tour-gallery::-webkit-scrollbar { height: 6px; }
+.tour-gallery::-webkit-scrollbar-track { background: var(--accent-light); border-radius: 10px; }
+.tour-gallery::-webkit-scrollbar-thumb { background: var(--accent-green); border-radius: 10px; }
+
+.gallery-img {
+    flex: 0 0 auto; /* Картинки не сжимаются */
+    width: 300px; /* Фиксированная ширина картинки */
     height: 200px;
     object-fit: cover;
     border-radius: var(--border-radius);
     cursor: pointer;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    scroll-snap-align: start; /* Прилипание */
+    transition: transform 0.3s ease;
     box-shadow: 0 4px 10px rgba(0,0,0,0.1);
 }
+.gallery-img:hover { transform: scale(1.02); }
 
-.gallery-img:hover {
-    transform: scale(1.03);
-    box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+/* Кнопки прокрутки */
+.gallery-btn {
+    background: var(--card-bg); color: var(--text-main);
+    border: 1px solid #ddd; width: 44px; height: 44px;
+    border-radius: 50%; display: flex; align-items: center; justify-content: center;
+    cursor: pointer; font-size: 1.2rem;
+    position: absolute; z-index: 10;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    transition: var(--transition);
 }
+.gallery-btn:hover { background: var(--accent-green); color: #fff; border-color: var(--accent-green); }
+.gallery-btn--prev { left: -20px; }
+.gallery-btn--next { right: -20px; }
 
-/* Блок бронирования */
+/* =========================================
+   БЛОК БРОНИРОВАНИЯ
+   ========================================= */
 .tour-info-box {
     background: var(--card-bg); padding: 30px; border-radius: var(--border-radius);
     margin: 40px 0; display: flex; justify-content: space-between; align-items: center;
@@ -453,40 +505,21 @@ button[type="submit"]:disabled { background: #ccc; cursor: not-allowed; transfor
    ========================================= */
 .menu-toggle {
     display: none; /* Скрыт на десктопе */
-    width: 44px;
-    height: 44px;
-    position: relative;
-    z-index: 200;
+    width: 44px; height: 44px;
+    position: relative; z-index: 200;
     background: rgba(255, 255, 255, 0.15);
-    border-radius: 8px;
-    backdrop-filter: blur(5px);
+    border-radius: 8px; backdrop-filter: blur(5px);
 }
-
-.menu-toggle__icon,
-.menu-toggle__icon::before,
-.menu-toggle__icon::after {
-    display: block;
-    width: 24px;
-    height: 2px;
-    background: #fff;
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
+.menu-toggle__icon, .menu-toggle__icon::before, .menu-toggle__icon::after {
+    display: block; width: 24px; height: 2px; background: #fff;
+    position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%);
     transition: transform 0.3s, opacity 0.3s;
 }
-
-.menu-toggle__icon::before,
-.menu-toggle__icon::after {
-    content: '';
-    left: 0;
-    transform: translate(0, 0);
+.menu-toggle__icon::before, .menu-toggle__icon::after {
+    content: ''; left: 0; transform: translate(0, 0);
 }
-
 .menu-toggle__icon::before { top: -8px; }
 .menu-toggle__icon::after { top: 8px; }
-
-/* Анимация крестика */
 .menu-toggle[aria-expanded="true"] .menu-toggle__icon { background: transparent; }
 .menu-toggle[aria-expanded="true"] .menu-toggle__icon::before { transform: rotate(45deg); top: 0; }
 .menu-toggle[aria-expanded="true"] .menu-toggle__icon::after { transform: rotate(-45deg); top: 0; }
@@ -495,68 +528,26 @@ button[type="submit"]:disabled { background: #ccc; cursor: not-allowed; transfor
    МОДАЛЬНОЕ ОКНО
    ========================================= */
 .modal {
-    position: fixed;
-    inset: 0;
-    z-index: 1000;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    opacity: 0;
-    visibility: hidden;
-    transition: opacity 0.3s, visibility 0.3s;
+    position: fixed; inset: 0; z-index: 1000;
+    display: flex; align-items: center; justify-content: center;
+    opacity: 0; visibility: hidden; transition: opacity 0.3s, visibility 0.3s;
 }
-
-.modal.is-open {
-    opacity: 1;
-    visibility: visible;
-}
-
-.modal__overlay {
-    position: absolute;
-    inset: 0;
-    background: rgba(0, 0, 0, 0.6);
-    backdrop-filter: blur(4px);
-}
-
+.modal.is-open { opacity: 1; visibility: visible; }
+.modal__overlay { position: absolute; inset: 0; background: rgba(0, 0, 0, 0.6); backdrop-filter: blur(4px); }
 .modal__content {
-    position: relative;
-    background: var(--card-bg);
-    color: var(--text-main);
-    width: 100%;
-    max-width: 500px;
-    padding: 40px;
-    border-radius: var(--border-radius);
-    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
-    transform: translateY(20px);
-    transition: transform 0.3s;
-    margin: 20px;
+    position: relative; background: var(--card-bg); color: var(--text-main);
+    width: 100%; max-width: 500px; padding: 40px;
+    border-radius: var(--border-radius); box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+    transform: translateY(20px); transition: transform 0.3s; margin: 20px;
 }
-
-.modal.is-open .modal__content {
-    transform: translateY(0);
-}
-
+.modal.is-open .modal__content { transform: translateY(0); }
 .modal__close {
-    position: absolute;
-    top: 15px;
-    right: 15px;
-    font-size: 2rem;
-    line-height: 1;
-    color: var(--text-muted);
-    transition: color 0.2s;
+    position: absolute; top: 15px; right: 15px;
+    font-size: 2rem; line-height: 1; color: var(--text-muted); transition: color 0.2s;
 }
 .modal__close:hover { color: var(--text-main); }
-
-.modal__content h2 {
-    font-family: var(--font-serif);
-    font-size: 1.8rem;
-    margin: 0 0 10px;
-    color: var(--accent-green);
-}
-.modal__content p {
-    margin: 0 0 20px;
-    color: var(--text-muted);
-}
+.modal__content h2 { font-family: var(--font-serif); font-size: 1.8rem; margin: 0 0 10px; color: var(--accent-green); }
+.modal__content p { margin: 0 0 20px; color: var(--text-muted); }
 
 /* =========================================
    ФУТЕР И КНОПКА НАВЕРХ
@@ -594,29 +585,14 @@ footer {
     
     /* Скрываем навигацию, превращаем в выезжающую панель */
     .main-nav {
-        position: fixed;
-        top: 0;
-        right: -100%;
-        width: 280px;
-        height: 100vh;
-        background: var(--card-bg);
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        gap: 30px;
-        transition: right 0.3s ease;
-        z-index: 150;
+        position: fixed; top: 0; right: -100%;
+        width: 280px; height: 100vh; background: var(--card-bg);
+        flex-direction: column; justify-content: center; align-items: center;
+        gap: 30px; transition: right 0.3s ease; z-index: 150;
         box-shadow: -5px 0 20px rgba(0,0,0,0.1);
     }
-    
-    .main-nav.is-open {
-        right: 0;
-    }
-    
-    .main-nav a {
-        color: var(--text-main) !important; /* Темный текст на светлом фоне */
-        font-size: 1.2rem;
-    }
+    .main-nav.is-open { right: 0; }
+    .main-nav a { color: var(--text-main) !important; font-size: 1.2rem; }
     
     #a11y-toggle { width: 38px; height: 38px; }
     .a11y-panel { top: 70px; right: 20px; left: auto; width: 260px; }
@@ -632,11 +608,7 @@ footer {
     .tour-card { height: 300px; }
     .tour-body { padding: 20px; }
     .tour-body h3 { font-size: 1.3rem; }
-    .tour-body p {
-        font-size: 0.85rem;
-        -webkit-line-clamp: 1; 
-        line-clamp: 1;
-    }
+    .tour-body p { font-size: 0.85rem; -webkit-line-clamp: 1; line-clamp: 1; }
     
     .tour-info-box { flex-direction: column; gap: 20px; text-align: center; }
     .info-price { font-size: 1.6rem; }
@@ -648,7 +620,6 @@ footer {
     .tour-hero { height: 40vh; min-height: 300px; }
     .tour-hero h1 { font-size: 2rem; letter-spacing: 2px; }
     .tour-details { margin: 40px auto; }
-    .tour-details h2 { font-size: 1.5rem; }
     
     .inner-header { padding: 15px 20px; }
     .inner-header-right { gap: 10px; }
@@ -656,4 +627,8 @@ footer {
     #a11y-panel-tour { top: 70px; right: 20px; width: 260px; }
     
     .modal__content { padding: 30px 20px; }
+
+    /* Карусель на мобильных */
+    .gallery-btn { display: none; } /* Убираем кнопки, работает свайп */
+    .gallery-img { width: 250px; height: 160px; }
 }

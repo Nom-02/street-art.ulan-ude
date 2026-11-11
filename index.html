@@ -26,8 +26,6 @@
     <!-- ГЛАВНАЯ СТРАНИЦА -->
     <div id="page-home" class="page active">
         <header class="hero">
-            
-            <!-- ВЕРХНЯЯ ПАНЕЛЬ -->
             <div class="header-top">
                 <img src="img/logo.jpg" alt="Логотип Улан-Удэ" class="site-logo hero-logo">
                 
@@ -190,7 +188,6 @@
                 </div>
                 <div class="inner-header-right">
                     <a class="btn-back" onclick="showPage('home')">← На главную</a>
-                    <!-- Кнопка настроек жестко в HTML -->
                     <button id="a11y-toggle-tour" title="Специальные возможности" aria-label="Открыть меню" aria-expanded="false" aria-controls="a11y-panel-tour">
                         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
                     </button>
@@ -226,14 +223,46 @@
             </div>
             
             <div class="tour-details">
-                <h2>Описание путешествия</h2>
-                <p id="tour-desc"></p>
-                
-                <p>Вас ждет незабываемое приключение, наполненное красотой города, историей и современным искусством. Наши гиды — эксперты своего дела, которые знают каждый уголок.</p>
-                <p>В стоимость включено: услуги гида, аудиогид (по запросу). Вам останется только наслаждаться видами и фотографировать.</p>
+                <!-- ВКЛАДКИ (ТАБЫ) -->
+                <div class="tabs">
+                    <div class="tabs__list" role="tablist">
+                        <button class="tabs__btn is-active" role="tab" aria-selected="true" aria-controls="panel-desc" id="tab-desc">Описание</button>
+                        <button class="tabs__btn" role="tab" aria-selected="false" aria-controls="panel-info" id="tab-info">Что включено</button>
+                        <button class="tabs__btn" role="tab" aria-selected="false" aria-controls="panel-gallery" id="tab-gallery">Галерея</button>
+                    </div>
+                    
+                    <div class="tabs__panels">
+                        <!-- Панель 1: Описание -->
+                        <div class="tabs__panel is-active" role="tabpanel" id="panel-desc" aria-labelledby="tab-desc">
+                            <h2>Описание путешествия</h2>
+                            <p id="tour-desc"></p>
+                            <p>Вас ждет незабываемое приключение, наполненное красотой города, историей и современным искусством. Наши гиды — эксперты своего дела, которые знают каждый уголок.</p>
+                        </div>
 
-                <h2 style="margin-top: 40px;">Галерея</h2>
-                <div class="tour-gallery" id="tour-gallery"></div>
+                        <!-- Панель 2: Что включено -->
+                        <div class="tabs__panel" role="tabpanel" id="panel-info" aria-labelledby="tab-info">
+                            <h2>Что включено в стоимость</h2>
+                            <ul style="list-style-type: disc; padding-left: 20px; color: var(--text-muted); font-size: 1.1rem;">
+                                <li>Услуги профессионального гида</li>
+                                <li>Аудиогид (по запросу)</li>
+                                <li>Входные билеты на объекты</li>
+                                <li>Незабываемые впечатления и фотографии</li>
+                            </ul>
+                        </div>
+
+                        <!-- Панель 3: Галерея с прокруткой -->
+                        <div class="tabs__panel" role="tabpanel" id="panel-gallery" aria-labelledby="tab-gallery">
+                            <h2>Фотографии с экскурсии</h2>
+                            
+                            <div class="gallery-carousel">
+                                <button class="gallery-btn gallery-btn--prev" aria-label="Прокрутить влево">&#10094;</button>
+                                <div class="tour-gallery" id="tour-gallery"></div>
+                                <button class="gallery-btn gallery-btn--next" aria-label="Прокрутить вправо">&#10095;</button>
+                            </div>
+                            
+                        </div>
+                    </div>
+                </div>
 
                 <div class="tour-info-box">
                     <div>
@@ -276,9 +305,7 @@
         </div>
     </div>
 
-    <!-- =========================================
-         МОДАЛЬНОЕ ОКНО БРОНИРОВАНИЯ
-         ========================================= -->
+    <!-- МОДАЛЬНОЕ ОКНО БРОНИРОВАНИЯ -->
     <div class="modal" id="modal-booking" role="dialog" aria-modal="true" aria-labelledby="modal-title">
         <div class="modal__overlay" data-close-modal></div>
         <div class="modal__content">
