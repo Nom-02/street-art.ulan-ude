@@ -1,35 +1,13 @@
 document.addEventListener('DOMContentLoaded', () => {
     
     // =========================================
-    // 1. БАЗОВЫЕ УТИЛИТЫ И ГОД
+    // 1. ГОД
     // =========================================
     const yearEl = document.querySelector('#year');
     if (yearEl) yearEl.textContent = new Date().getFullYear();
 
     // =========================================
-    // 2. БУРГЕР-МЕНЮ (МОБИЛЬНОЕ)
-    // =========================================
-    const menuToggle = document.querySelector('.menu-toggle');
-    const siteNav = document.querySelector('#site-nav');
-
-    if (menuToggle && siteNav) {
-        menuToggle.addEventListener('click', () => {
-            const isOpen = siteNav.classList.toggle('is-open');
-            menuToggle.setAttribute('aria-expanded', String(isOpen));
-            menuToggle.setAttribute('aria-label', isOpen ? 'Закрыть меню' : 'Открыть меню');
-        });
-
-        siteNav.querySelectorAll('a').forEach(link => {
-            link.addEventListener('click', () => {
-                siteNav.classList.remove('is-open');
-                menuToggle.setAttribute('aria-expanded', 'false');
-                menuToggle.setAttribute('aria-label', 'Открыть меню');
-            });
-        });
-    }
-
-    // =========================================
-    // 3. МОДАЛЬНОЕ ОКНО БРОНИРОВАНИЯ
+    // 2. МОДАЛЬНОЕ ОКНО БРОНИРОВАНИЯ
     // =========================================
     const modal = document.querySelector('#modal-booking');
     const modalForm = document.querySelector('#modal-booking-form');
@@ -52,10 +30,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
         document.querySelectorAll('[data-open-modal]').forEach(btn => {
             btn.addEventListener('click', () => {
-                const tourName = document.querySelector('#tour-title').textContent;
-                if (tourName && document.querySelector('#page-tour').classList.contains('active')) {
+                const tourTitleEl = document.querySelector('#tour-title');
+                const tourPage = document.querySelector('#page-tour');
+                if (tourTitleEl && tourPage && tourPage.classList.contains('active')) {
                     const msgField = modal.querySelector('#modal-msg');
-                    if (msgField) msgField.value = `Хочу забронировать тур: "${tourName}"`;
+                    if (msgField) msgField.value = `Хочу забронировать тур: "${tourTitleEl.textContent}"`;
                 }
                 openModal();
             });
@@ -95,7 +74,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
                     status.textContent = 'Спасибо! Заявка отправлена.';
                     modalForm.reset();
-                    setTimeout(closeModal, 2000); 
+                    setTimeout(() => {
+                        closeModal();
+                        status.style.display = 'none';
+                        status.textContent = '';
+                    }, 2000);
                 } catch (error) {
                     status.textContent = 'Ошибка. Попробуйте еще раз.';
                     status.style.color = '#cc4b1d';
@@ -108,7 +91,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // =========================================
-    // 4. ДАННЫЕ ТУРОВ
+    // 3. ДАННЫЕ ТУРОВ
     // =========================================
     const toursData = {
         1: {
@@ -142,7 +125,7 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     // =========================================
-    // 5. НАВИГАЦИЯ (SPA)
+    // 4. НАВИГАЦИЯ SPA
     // =========================================
     window.showPage = (pageId) => {
         document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
@@ -150,6 +133,10 @@ document.addEventListener('DOMContentLoaded', () => {
         if (targetPage) {
             targetPage.classList.add('active');
             window.scrollTo(0, 0); 
+        }
+        // Останавливаем автопрокрутку, если ушли со страницы тура
+        if (pageId !== 'tour' && typeof stopGalleryAutoScroll === 'function') {
+            stopGalleryAutoScroll();
         }
     };
 
@@ -180,15 +167,32 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
         
-        // Сбрасываем активную вкладку на "Описание" при открытии нового тура
-        const firstTab = document.querySelector('.tabs__btn');
-        if (firstTab) firstTab.click();
+        // Сброс вкладки на "Описание"
+        const allTabs = document.querySelectorAll('.tabs__btn');
+        const allPanels = document.querySelectorAll('.tabs__panel');
+        if (allTabs.length > 0) {
+            allTabs.forEach(t => {
+                t.classList.remove('is-active');
+                t.setAttribute('aria-selected', 'false');
+            });
+            allPanels.forEach(p => p.classList.remove('is-active'));
+            allTabs[0].classList.add('is-active');
+            allTabs[0].setAttribute('aria-selected', 'true');
+            const firstPanel = document.querySelector('#panel-desc');
+            if (firstPanel) firstPanel.classList.add('is-active');
+        }
 
         showPage('tour');
+        // Перезапускаем автопрокрутку галереи для нового тура
+        setTimeout(() => {
+            if (typeof startGalleryAutoScroll === 'function') {
+                startGalleryAutoScroll();
+            }
+        }, 100);
     };
 
     // =========================================
-    // 6. ВКЛАДКИ (ТАБЫ) НА СТРАНИЦЕ ТУРА
+    // 5. ВКЛАДКИ (ТАБЫ)
     // =========================================
     const tabs = document.querySelectorAll('.tabs__btn');
     if (tabs.length > 0) {
@@ -213,24 +217,65 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // =========================================
-    // 7. ЛОГИКА ПРОКРУТКИ ГАЛЕРЕИ
+    // 6. ГАЛЕРЕЯ: ПРОКРУТКА + АВТОПРОКРУТКА
     // =========================================
     const galleryContainer = document.getElementById('tour-gallery');
     const prevBtn = document.querySelector('.gallery-btn--prev');
     const nextBtn = document.querySelector('.gallery-btn--next');
 
+    let galleryAutoScroll = null;
+    let galleryPaused = false;
+
+    const startGalleryAutoScroll = () => {
+        if (!galleryContainer) return;
+        stopGalleryAutoScroll();
+        galleryAutoScroll = setInterval(() => {
+            if (galleryPaused) return;
+            if (!galleryContainer.closest('.page.active')) return;
+            const maxScroll = galleryContainer.scrollWidth - galleryContainer.clientWidth;
+            if (galleryContainer.scrollLeft >= maxScroll - 5) {
+                galleryContainer.scrollTo({ left: 0, behavior: 'smooth' });
+            } else {
+                galleryContainer.scrollBy({ left: 320, behavior: 'smooth' });
+            }
+        }, 4000);
+    };
+
+    const stopGalleryAutoScroll = () => {
+        if (galleryAutoScroll) {
+            clearInterval(galleryAutoScroll);
+            galleryAutoScroll = null;
+        }
+    };
+
     if (galleryContainer && prevBtn && nextBtn) {
         prevBtn.addEventListener('click', () => {
+            galleryPaused = true;
             galleryContainer.scrollBy({ left: -320, behavior: 'smooth' });
+            setTimeout(() => { galleryPaused = false; }, 3000);
         });
         nextBtn.addEventListener('click', () => {
+            galleryPaused = true;
             galleryContainer.scrollBy({ left: 320, behavior: 'smooth' });
+            setTimeout(() => { galleryPaused = false; }, 3000);
         });
+
+        galleryContainer.addEventListener('mouseenter', () => { galleryPaused = true; });
+        galleryContainer.addEventListener('mouseleave', () => { galleryPaused = false; });
+
+        galleryContainer.addEventListener('touchstart', () => {
+            galleryPaused = true;
+            setTimeout(() => { galleryPaused = false; }, 5000);
+        }, { passive: true });
+
+        startGalleryAutoScroll();
     }
 
     // =========================================
-    // 8. УНИВЕРСАЛЬНЫЙ ОБРАБОТЧИК ПАНЕЛЕЙ ДОСТУПНОСТИ
+    // 7. УНИВЕРСАЛЬНЫЙ ОБРАБОТЧИК ПАНЕЛЕЙ ДОСТУПНОСТИ
     // =========================================
+    let a11yPanelOpen = null;
+
     const setupA11yPanel = (prefix) => {
         const toggleBtn = document.querySelector(`#a11y-toggle${prefix}`);
         const panel = document.querySelector(`#a11y-panel${prefix}`);
@@ -241,14 +286,21 @@ document.addEventListener('DOMContentLoaded', () => {
         const closePanel = () => {
             panel.setAttribute('hidden', '');
             toggleBtn.setAttribute('aria-expanded', 'false');
+            if (a11yPanelOpen === panel) a11yPanelOpen = null;
         };
 
         toggleBtn.addEventListener('click', (e) => {
             e.stopPropagation();
             const isHidden = panel.hasAttribute('hidden');
             if (isHidden) {
+                if (a11yPanelOpen && a11yPanelOpen !== panel) {
+                    a11yPanelOpen.setAttribute('hidden', '');
+                    const otherToggle = document.querySelector(`#a11y-toggle${a11yPanelOpen.id === 'a11y-panel-tour' ? '-tour' : ''}`);
+                    if (otherToggle) otherToggle.setAttribute('aria-expanded', 'false');
+                }
                 panel.removeAttribute('hidden');
                 toggleBtn.setAttribute('aria-expanded', 'true');
+                a11yPanelOpen = panel;
             } else {
                 closePanel();
             }
@@ -260,18 +312,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 closePanel();
             });
         }
-
-        document.addEventListener('click', (event) => {
-            if (!panel.hasAttribute('hidden')) {
-                if (!panel.contains(event.target) && !toggleBtn.contains(event.target)) {
-                    closePanel();
-                }
-            }
-        });
-
-        document.addEventListener('keydown', (event) => {
-            if (event.key === 'Escape') closePanel();
-        });
 
         // Тема
         const themeBtn = document.querySelector(`#theme-toggle${prefix}`);
@@ -328,8 +368,8 @@ document.addEventListener('DOMContentLoaded', () => {
         // Озвучка
         const readBtn = document.querySelector(`#read-page${prefix}`);
         const readText = document.querySelector(`#read-text${prefix}`);
-        const prevBtn = document.querySelector(`#speech-prev${prefix}`);
-        const nextBtn = document.querySelector(`#speech-next${prefix}`);
+        const prevBtnSpeech = document.querySelector(`#speech-prev${prefix}`);
+        const nextBtnSpeech = document.querySelector(`#speech-next${prefix}`);
 
         let textChunks = [];
         let currentChunk = 0;
@@ -340,7 +380,8 @@ document.addEventListener('DOMContentLoaded', () => {
             const activePage = document.querySelector('.page.active');
             if (!activePage) return;
             activePage.querySelectorAll('h1, h2, h3, p').forEach(el => {
-                if (el.id.includes('status')) return;
+                if (el.id && el.id.includes('status')) return;
+                if (el.closest('[hidden]')) return;
                 const text = el.innerText.trim();
                 if (text) textChunks.push(text);
             });
@@ -355,6 +396,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 readText.textContent = 'Озвучить';
                 readBtn.setAttribute('aria-pressed', 'false');
             }
+        };
+
+        const stopSpeaking = () => {
+            window.speechSynthesis.cancel();
+            isPlaying = false;
+            currentChunk = 0;
+            updateUI();
         };
 
         const speakCurrentChunk = () => {
@@ -379,13 +427,6 @@ document.addEventListener('DOMContentLoaded', () => {
             updateUI();
         };
 
-        const stopSpeaking = () => {
-            window.speechSynthesis.cancel();
-            isPlaying = false;
-            currentChunk = 0;
-            updateUI();
-        };
-
         if (readBtn && 'speechSynthesis' in window) {
             readBtn.addEventListener('click', () => {
                 if (isPlaying) {
@@ -399,20 +440,48 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             });
 
-            if (prevBtn) prevBtn.addEventListener('click', () => {
+            if (prevBtnSpeech) prevBtnSpeech.addEventListener('click', () => {
                 if (currentChunk > 0) { currentChunk--; if (isPlaying) speakCurrentChunk(); }
             });
-            if (nextBtn) nextBtn.addEventListener('click', () => {
+            if (nextBtnSpeech) nextBtnSpeech.addEventListener('click', () => {
                 if (currentChunk < textChunks.length - 1) { currentChunk++; if (isPlaying) speakCurrentChunk(); }
             });
         }
     };
 
+    // Глобальные обработчики закрытия панелей
+    document.addEventListener('click', (event) => {
+        if (a11yPanelOpen) {
+            const panel = a11yPanelOpen;
+            const isClickInside = panel.contains(event.target);
+            const toggleId = panel.id === 'a11y-panel-tour' ? 'a11y-toggle-tour' : 'a11y-toggle';
+            const toggleBtn = document.getElementById(toggleId);
+            const isClickOnToggle = toggleBtn && toggleBtn.contains(event.target);
+            
+            if (!isClickInside && !isClickOnToggle) {
+                panel.setAttribute('hidden', '');
+                if (toggleBtn) toggleBtn.setAttribute('aria-expanded', 'false');
+                a11yPanelOpen = null;
+            }
+        }
+    });
+
+    document.addEventListener('keydown', (event) => {
+        if (event.key === 'Escape' && a11yPanelOpen) {
+            const panel = a11yPanelOpen;
+            panel.setAttribute('hidden', '');
+            const toggleId = panel.id === 'a11y-panel-tour' ? 'a11y-toggle-tour' : 'a11y-toggle';
+            const toggleBtn = document.getElementById(toggleId);
+            if (toggleBtn) toggleBtn.setAttribute('aria-expanded', 'false');
+            a11yPanelOpen = null;
+        }
+    });
+
     setupA11yPanel('');
     setupA11yPanel('-tour');
 
     // =========================================
-    // 9. ОТПРАВКА ОБЫЧНЫХ ФОРМ
+    // 8. ОТПРАВКА ОБЫЧНЫХ ФОРМ
     // =========================================
     const setupForm = (formId, statusId, successMsgTemplate) => {
         const form = document.querySelector(formId);
@@ -460,7 +529,7 @@ document.addEventListener('DOMContentLoaded', () => {
     setupForm('#booking-form', '#book-form-status', 'Спасибо, {name}! Заявка на тур отправлена.');
 
     // =========================================
-    // 10. КНОПКА "НАВЕРХ"
+    // 9. КНОПКА "НАВЕРХ"
     // =========================================
     const upBtn = document.querySelector('#to-top');
     if (upBtn) {
@@ -469,6 +538,50 @@ document.addEventListener('DOMContentLoaded', () => {
         });
         upBtn.addEventListener('click', () => {
             window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+    }
+
+    // =========================================
+    // 10. БУРГЕР-МЕНЮ (мобильное)
+    // =========================================
+    const menuToggle = document.getElementById('menu-toggle');
+    const siteNav = document.getElementById('site-nav');
+
+    if (menuToggle && siteNav) {
+        const closeMenu = () => {
+            siteNav.classList.remove('is-open');
+            menuToggle.setAttribute('aria-expanded', 'false');
+            menuToggle.setAttribute('aria-label', 'Открыть меню');
+        };
+
+        menuToggle.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const isOpen = siteNav.classList.contains('is-open');
+            if (isOpen) {
+                closeMenu();
+            } else {
+                siteNav.classList.add('is-open');
+                menuToggle.setAttribute('aria-expanded', 'true');
+                menuToggle.setAttribute('aria-label', 'Закрыть меню');
+            }
+        });
+
+        siteNav.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', closeMenu);
+        });
+
+        document.addEventListener('click', (e) => {
+            if (siteNav.classList.contains('is-open') &&
+                !siteNav.contains(e.target) &&
+                !menuToggle.contains(e.target)) {
+                closeMenu();
+            }
+        });
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && siteNav.classList.contains('is-open')) {
+                closeMenu();
+            }
         });
     }
 });

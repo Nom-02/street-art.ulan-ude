@@ -149,14 +149,13 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
     flex-shrink: 0;
 }
 
-/* Правая часть шапки (Бургер + Шестеренка) */
 .header-actions {
     display: flex;
     align-items: center;
     gap: 15px;
+    position: relative;
 }
 
-/* Меню (по центру) */
 .main-nav {
     position: absolute;
     left: 50%;
@@ -338,7 +337,6 @@ button[type="submit"]:disabled { background: #ccc; cursor: not-allowed; transfor
     color: var(--bg-color);
 }
 
-/* Кнопка настроек на странице тура (ТЕМНАЯ) */
 #a11y-toggle-tour {
     width: 44px; height: 44px;
     background: rgba(0, 0, 0, 0.05);
@@ -350,7 +348,6 @@ button[type="submit"]:disabled { background: #ccc; cursor: not-allowed; transfor
 }
 #a11y-toggle-tour:hover { background: rgba(0, 0, 0, 0.1); transform: scale(1.05); }
 
-/* Панель настроек на странице тура */
 #a11y-panel-tour {
     position: absolute; top: 80px; right: 40px;
     background: var(--card-bg); color: var(--text-main);
@@ -379,7 +376,6 @@ button[type="submit"]:disabled { background: #ccc; cursor: not-allowed; transfor
     padding: 0 20px;
 }
 
-/* Детали тура */
 .tour-details { max-width: 800px; margin: 60px auto; padding: 0 20px; }
 
 /* =========================================
@@ -406,7 +402,7 @@ button[type="submit"]:disabled { background: #ccc; cursor: not-allowed; transfor
 .tabs__panel p { margin-bottom: 20px; font-size: 1.1rem; color: var(--text-muted); }
 
 /* =========================================
-   КАРУСЕЛЬ ГАЛЕРЕИ (ПРОКРУТКА)
+   КАРУСЕЛЬ ГАЛЕРЕИ
    ========================================= */
 .gallery-carousel {
     position: relative;
@@ -416,34 +412,32 @@ button[type="submit"]:disabled { background: #ccc; cursor: not-allowed; transfor
 }
 
 .tour-gallery {
-    display: flex; /* Горизонтальная лента */
+    display: flex;
     gap: 15px;
-    overflow-x: auto; /* Включаем горизонтальную прокрутку */
+    overflow-x: auto;
     scroll-behavior: smooth;
-    scroll-snap-type: x mandatory; /* Прилипание к картинкам */
-    padding-bottom: 10px; /* Место для скроллбара */
+    scroll-snap-type: x mandatory;
+    padding-bottom: 10px;
     width: 100%;
 }
 
-/* Прячем стандартный скроллбар для красоты */
 .tour-gallery::-webkit-scrollbar { height: 6px; }
 .tour-gallery::-webkit-scrollbar-track { background: var(--accent-light); border-radius: 10px; }
 .tour-gallery::-webkit-scrollbar-thumb { background: var(--accent-green); border-radius: 10px; }
 
 .gallery-img {
-    flex: 0 0 auto; /* Картинки не сжимаются */
-    width: 300px; /* Фиксированная ширина картинки */
+    flex: 0 0 auto;
+    width: 300px;
     height: 200px;
     object-fit: cover;
     border-radius: var(--border-radius);
     cursor: pointer;
-    scroll-snap-align: start; /* Прилипание */
+    scroll-snap-align: start;
     transition: transform 0.3s ease;
     box-shadow: 0 4px 10px rgba(0,0,0,0.1);
 }
 .gallery-img:hover { transform: scale(1.02); }
 
-/* Кнопки прокрутки */
 .gallery-btn {
     background: var(--card-bg); color: var(--text-main);
     border: 1px solid #ddd; width: 44px; height: 44px;
@@ -483,7 +477,7 @@ button[type="submit"]:disabled { background: #ccc; cursor: not-allowed; transfor
 }
 .tour-details .btn-back:hover { color: var(--accent-green); background: none; }
 
-/* Страница бронирования (отдельная) */
+/* Страница бронирования */
 .booking-page {
     padding-top: 130px; min-height: 100vh;
     display: flex; justify-content: center; align-items: flex-start;
@@ -501,28 +495,56 @@ button[type="submit"]:disabled { background: #ccc; cursor: not-allowed; transfor
 .booking-container p { text-align: center; color: var(--text-muted); margin-bottom: 30px; }
 
 /* =========================================
-   МОБИЛЬНОЕ МЕНЮ (БУРГЕР)
+   БУРГЕР-МЕНЮ
    ========================================= */
 .menu-toggle {
-    display: none; /* Скрыт на десктопе */
+    display: none;
     width: 44px; height: 44px;
-    position: relative; z-index: 200;
+    position: relative;
     background: rgba(255, 255, 255, 0.15);
-    border-radius: 8px; backdrop-filter: blur(5px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 8px;
+    backdrop-filter: blur(5px);
+    transition: var(--transition);
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
 }
-.menu-toggle__icon, .menu-toggle__icon::before, .menu-toggle__icon::after {
-    display: block; width: 24px; height: 2px; background: #fff;
-    position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%);
-    transition: transform 0.3s, opacity 0.3s;
+
+.menu-toggle__icon,
+.menu-toggle__icon::before,
+.menu-toggle__icon::after {
+    display: block;
+    width: 22px;
+    height: 2px;
+    background: #fff;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    transition: transform 0.3s, background 0.3s, top 0.3s;
 }
-.menu-toggle__icon::before, .menu-toggle__icon::after {
-    content: ''; left: 0; transform: translate(0, 0);
+
+.menu-toggle__icon::before,
+.menu-toggle__icon::after {
+    content: '';
+    left: 0;
+    transform: translate(0, 0);
 }
-.menu-toggle__icon::before { top: -8px; }
-.menu-toggle__icon::after { top: 8px; }
-.menu-toggle[aria-expanded="true"] .menu-toggle__icon { background: transparent; }
-.menu-toggle[aria-expanded="true"] .menu-toggle__icon::before { transform: rotate(45deg); top: 0; }
-.menu-toggle[aria-expanded="true"] .menu-toggle__icon::after { transform: rotate(-45deg); top: 0; }
+.menu-toggle__icon::before { top: -7px; }
+.menu-toggle__icon::after  { top: 7px; }
+
+.menu-toggle[aria-expanded="true"] .menu-toggle__icon {
+    background: transparent;
+}
+.menu-toggle[aria-expanded="true"] .menu-toggle__icon::before {
+    transform: rotate(45deg);
+    top: 0;
+}
+.menu-toggle[aria-expanded="true"] .menu-toggle__icon::after {
+    transform: rotate(-45deg);
+    top: 0;
+}
 
 /* =========================================
    МОДАЛЬНОЕ ОКНО
@@ -568,7 +590,7 @@ footer {
 #to-top:hover { background: #2c362d; transform: translateY(-3px); }
 
 /* =========================================
-   АДАПТИВНОСТЬ (МОБИЛЬНЫЕ)
+   АДАПТИВНОСТЬ
    ========================================= */
 @media (max-width: 1024px) {
     .tour-card { grid-column: span 12; height: 350px; }
@@ -577,58 +599,100 @@ footer {
 }
 
 @media (max-width: 768px) {
-    .header-top { top: 20px; left: 20px; right: 20px; }
-    .site-logo { height: 40px; }
-    
-    /* Показываем бургер */
-    .menu-toggle { display: block; }
-    
-    /* Скрываем навигацию, превращаем в выезжающую панель */
-    .main-nav {
-        position: fixed; top: 0; right: -100%;
-        width: 280px; height: 100vh; background: var(--card-bg);
-        flex-direction: column; justify-content: center; align-items: center;
-        gap: 30px; transition: right 0.3s ease; z-index: 150;
-        box-shadow: -5px 0 20px rgba(0,0,0,0.1);
+    .header-top {
+        top: 15px;
+        left: 20px;
+        right: 20px;
+        flex-wrap: wrap;
+        gap: 12px;
     }
-    .main-nav.is-open { right: 0; }
-    .main-nav a { color: var(--text-main) !important; font-size: 1.2rem; }
-    
+    .site-logo { height: 40px; }
+
     #a11y-toggle { width: 38px; height: 38px; }
+    .header-actions { margin-left: auto; }
+
+    /* Бургер на мобильных */
+    .menu-toggle { display: flex; }
+
+    /* Выезжающее меню */
+    .main-nav {
+        position: fixed;
+        top: 0;
+        right: -100%;
+        width: 80%;
+        max-width: 320px;
+        height: 100vh;
+        background: var(--card-bg);
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        gap: 30px;
+        transition: right 0.35s ease;
+        z-index: 9998;
+        box-shadow: -10px 0 30px rgba(0, 0, 0, 0.2);
+        padding: 40px 20px;
+        transform: none;
+        left: auto;
+    }
+
+    .main-nav.is-open {
+        right: 0;
+    }
+
+    .main-nav a {
+        color: var(--text-main);
+        font-size: 1.2rem;
+        font-weight: 600;
+        letter-spacing: 1px;
+    }
+
+    /* Затемнение фона */
+    .main-nav.is-open::before {
+        content: '';
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: -1;
+    }
+
+    .menu-toggle {
+        z-index: 9999;
+    }
+
+    .menu-toggle[aria-expanded="true"] .menu-toggle__icon,
+    .menu-toggle[aria-expanded="true"] .menu-toggle__icon::before,
+    .menu-toggle[aria-expanded="true"] .menu-toggle__icon::after {
+        background: var(--text-main);
+    }
+    .menu-toggle[aria-expanded="true"] .menu-toggle__icon {
+        background: transparent;
+    }
+
+    /* Остальные мобильные стили */
     .a11y-panel { top: 70px; right: 20px; left: auto; width: 260px; }
-    
-    header.hero { min-height: 600px; padding-top: 100px; }
+    header.hero { min-height: 600px; padding-top: 120px; }
     .hero h1 { font-size: clamp(3rem, 15vw, 4.5rem); letter-spacing: 5px; }
     .hero .hero-sub { font-size: 0.9rem; padding: 0 10px; }
-    
     main { padding: 40px 20px; }
     .section-header h2 { font-size: 1.8rem; letter-spacing: 2px; }
     .section-header { margin-bottom: 40px; }
-    
     .tour-card { height: 300px; }
     .tour-body { padding: 20px; }
     .tour-body h3 { font-size: 1.3rem; }
     .tour-body p { font-size: 0.85rem; -webkit-line-clamp: 1; line-clamp: 1; }
-    
     .tour-info-box { flex-direction: column; gap: 20px; text-align: center; }
     .info-price { font-size: 1.6rem; }
     .btn-book { width: 100%; }
-    
     .booking-container { padding: 30px 20px; margin: 0 10px; }
     .booking-container h2 { font-size: 2rem; }
-    
     .tour-hero { height: 40vh; min-height: 300px; }
     .tour-hero h1 { font-size: 2rem; letter-spacing: 2px; }
     .tour-details { margin: 40px auto; }
-    
     .inner-header { padding: 15px 20px; }
     .inner-header-right { gap: 10px; }
     #a11y-toggle-tour { width: 38px; height: 38px; }
     #a11y-panel-tour { top: 70px; right: 20px; width: 260px; }
-    
     .modal__content { padding: 30px 20px; }
-
-    /* Карусель на мобильных */
-    .gallery-btn { display: none; } /* Убираем кнопки, работает свайп */
+    .gallery-btn { display: none; }
     .gallery-img { width: 250px; height: 160px; }
 }
